@@ -34,7 +34,7 @@ export default function BottomAppBar() {
     const detail = {
       uuid: uuidv4(),
       payment: payment,
-      trading_day: tradingDay,
+      trading_day: dayjs(tradingDay),
       trading_name: tradingName,
       note: note,
       bank: "gogin",
