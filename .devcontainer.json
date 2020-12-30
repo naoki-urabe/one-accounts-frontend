@@ -1,0 +1,9 @@
+{
+    "name": "One Accounts",
+    "dockerComposeFile": ["./docker-compose.yml"],
+    "service": "frontend",
+    "workspaceFolder": "/usr/local/frontend",
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/sh"
+    },
+}
