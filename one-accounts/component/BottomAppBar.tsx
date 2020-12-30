@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button'
 import Toolbar from '@material-ui/core/Toolbar'
+import TextField from '@material-ui/core/TextField'
 import dayjs from 'dayjs';
+import {v4 as uuidv4} from 'uuid';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,6 +17,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function BottomAppBar() {
   const classes = useStyles();
+  const [tradingDay,setTradingDay] = useState<Date>();
+  const [payment,setPayment] = useState<number>();
+  const [tradingName,setTradingName] = useState<string>();
+  const [note,setNote] = useState<string>();
   const axiosBase = require('axios');
   const axios = axiosBase.create({
     baseURL: 'http://localhost:8080',
@@ -24,24 +30,51 @@ export default function BottomAppBar() {
 
     responseType: 'json'
   });
-  const detail = {
-    uuid: "testtest",
-    trading_day: dayjs(),
-    trading_name: "trading name test",
-    note: "note test success",
-    bank: "gogin",
-  }
   const createDetail = (async () => {
+    const detail = {
+      uuid: uuidv4(),
+      payment: payment,
+      trading_day: tradingDay,
+      trading_name: tradingName,
+      note: note,
+      bank: "gogin",
+    }
+    console.log(detail);
     await axios.post('/api/accounts/gogin/details', detail)
       .then(res => {
         console.log(res);
       })
+  });
+  const handleTradingDay = ((e) => {
+    setTradingDay(e.target.value);
+  });
+  const handlePayment = ((e) => {
+    setPayment(e.target.value);
+  })
+  const handleTradingName = ((e) => {
+    setTradingName(e.target.value)
+  })
+  const handleNote = ((e) => {
+    setNote(e.target.value)
   })
   return (
     <React.Fragment>
-      <AppBar position="sticky" color="primary" className={classes.appBar}>
+      <AppBar position="sticky" color="transparent" className={classes.appBar} >
         <Toolbar>
-        <Button variant="contained" onClick={createDetail}>明細追加</Button>
+          <TextField
+            id="datetime-local"
+            label="取引日"
+            type="datetime-local"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={e => handleTradingDay(e)}
+            variant="outlined"
+          />
+        <TextField id="time" label="入金額" type="text" onChange={e => handlePayment(e)} variant="outlined" />
+        <TextField id="time" label="摘要" type="text" onChange={e => handleTradingName(e)} variant="outlined" />
+        <TextField id="time" label="備考" type="text" onChange={e => handleNote(e)} variant="outlined" />
+          <Button variant="contained" onClick={createDetail}>明細追加</Button>
         </Toolbar>
       </AppBar>
     </React.Fragment>
