@@ -1,25 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, withStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+
+interface Bank {
+  selectId: number;
+  bankName: string;
+  codeName: string
+}
 
 interface StyledTabsProps {
   value: number;
   onChange: (event: React.ChangeEvent<{}>, newValue: number) => void;
 }
-
-const StyledTabs = withStyles({
-  indicator: {
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    '& > span': {
-      maxWidth: 40,
-      width: '100%',
-      backgroundColor: '#635ee7',
-    },
-  },
-})((props: StyledTabsProps) => <Tabs {...props} TabIndicatorProps={{ children: <span /> }} />);
 
 interface StyledTabProps {
   label: string;
@@ -48,22 +41,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function CustomizedTabs() {
+export default function CustomizedTabs(props) {
+  const banks: Bank[] = props.banks;
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const axiosBase = require('axios');
+  const axios = axiosBase.create({
+    baseURL: 'http://localhost:8080',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+
+    responseType: 'json'
+  });
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     console.log(newValue);
-    setValue(newValue);
+    props.setSelectedBank(newValue);
   };
 
   return (
     <div className={classes.root}>
-        <StyledTabs value={value} onChange={handleChange} aria-label="styled tabs example">
-          <StyledTab label="島根中央信用金庫" />
-          <StyledTab label="山陰合同銀行" />
-          <StyledTab label="SBI銀行" />
-        </StyledTabs>
+      <Tabs value={props.selectedBank} onChange={handleChange} aria-label="styled tabs example">
+        {banks && banks.map(bank => <Tab label={bank.bankName} />)}
+      </Tabs>
     </div>
   );
 }

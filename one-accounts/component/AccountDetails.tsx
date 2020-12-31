@@ -72,7 +72,6 @@ const useStyles = makeStyles({
 function formatData(details: Data[]): Row[] {
   const rows = []
   for (let i = 0; i < details.length; i++) {
-    console.log(details[i])
     const tmp = {
       "tradingDay": details[i].trading_day,
       "payment": details[i].payment,

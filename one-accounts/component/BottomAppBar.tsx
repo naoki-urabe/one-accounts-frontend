@@ -5,7 +5,13 @@ import Button from '@material-ui/core/Button'
 import Toolbar from '@material-ui/core/Toolbar'
 import TextField from '@material-ui/core/TextField'
 import dayjs from 'dayjs';
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
+
+interface Bank {
+  selectId: number;
+  bankName: string;
+  codeName: string
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,12 +21,13 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function BottomAppBar() {
+export default function BottomAppBar(props) {
   const classes = useStyles();
-  const [tradingDay,setTradingDay] = useState<Date>();
-  const [payment,setPayment] = useState<number>();
-  const [tradingName,setTradingName] = useState<string>();
-  const [note,setNote] = useState<string>();
+  const [tradingDay, setTradingDay] = useState<Date>();
+  const [payment, setPayment] = useState<number>();
+  const [tradingName, setTradingName] = useState<string>();
+  const [note, setNote] = useState<string>();
+  const banks: Bank[] = props.banks;
   const axiosBase = require('axios');
   const axios = axiosBase.create({
     baseURL: 'http://localhost:8080',
@@ -37,7 +44,7 @@ export default function BottomAppBar() {
       trading_day: dayjs(tradingDay),
       trading_name: tradingName,
       note: note,
-      bank: "gogin",
+      bank: props.selectedBank,
     }
     console.log(detail);
     await axios.post('/api/accounts/gogin/details', detail)
@@ -71,9 +78,9 @@ export default function BottomAppBar() {
             onChange={e => handleTradingDay(e)}
             variant="outlined"
           />
-        <TextField id="time" label="入金額" type="text" onChange={e => handlePayment(e)} variant="outlined" />
-        <TextField id="time" label="摘要" type="text" onChange={e => handleTradingName(e)} variant="outlined" />
-        <TextField id="time" label="備考" type="text" onChange={e => handleNote(e)} variant="outlined" />
+          <TextField id="time" label="入金額" type="text" onChange={e => handlePayment(e)} variant="outlined" />
+          <TextField id="time" label="摘要" type="text" onChange={e => handleTradingName(e)} variant="outlined" />
+          <TextField id="time" label="備考" type="text" onChange={e => handleNote(e)} variant="outlined" />
           <Button variant="contained" onClick={createDetail}>明細追加</Button>
         </Toolbar>
       </AppBar>
