@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function CustomizedTabs(props) {
   const banks: Bank[] = props.banks;
+  console.log(banks);
   const classes = useStyles();
   const axiosBase = require('axios');
   const axios = axiosBase.create({

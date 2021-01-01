@@ -25,17 +25,17 @@ const Home = () => {
   useEffect(() => {
     axios.get('/api/banks')
       .then(res => {
-        const datas = []
+        const datas = Array(20)
         for (let i = 0; i < res.data.length; i++) {
-          //console.log(res.data);
+          const selectId = Number(res.data[i].select_id);
+          console.log(typeof selectId)
           const tmp = {
-            "selectId": res.data[i].select_id,
+            "selectId": selectId,
             "bankName": res.data[i].bank_name,
             "codeName": res.data[i].code_name,
           }
-          datas.push(tmp);
+          datas[selectId]=tmp;
         }
-        //console.log(datas);
         setBanks(datas);
       })
   },[])
@@ -44,7 +44,7 @@ const Home = () => {
       <ButtonAppBar />
       <AccountDetailsTabs banks={banks} selectedBank={selectedBank} setSelectedBank={setSelectedBank}/>
       <AccountDetails />
-      <BottomAppBar codeName={banks} selectedBank={selectedBank}/>
+      {banks && <BottomAppBar banks={banks} selectedBank={selectedBank}/>}
     </>
   )
 }

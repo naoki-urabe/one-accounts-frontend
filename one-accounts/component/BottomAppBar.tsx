@@ -28,6 +28,8 @@ export default function BottomAppBar(props) {
   const [tradingName, setTradingName] = useState<string>();
   const [note, setNote] = useState<string>();
   const banks: Bank[] = props.banks;
+  const selectId = props.selectedBank;
+  const bank = banks[selectId];
   const axiosBase = require('axios');
   const axios = axiosBase.create({
     baseURL: 'http://localhost:8080',
@@ -41,10 +43,10 @@ export default function BottomAppBar(props) {
     const detail = {
       uuid: uuidv4(),
       payment: payment,
-      trading_day: dayjs(tradingDay),
+      trading_day: dayjs(tradingDay).add(9, 'hour'),
       trading_name: tradingName,
       note: note,
-      bank: props.selectedBank,
+      bank: bank.codeName,
     }
     console.log(detail);
     await axios.post('/api/accounts/gogin/details', detail)
